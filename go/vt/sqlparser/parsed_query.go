@@ -81,9 +81,8 @@ func (pq *ParsedQuery) Append(buf *strings.Builder, bindVariables map[string]*qu
 }
 
 // MarshalJSON is a custom JSON marshaler for ParsedQuery.
-// Note that any queries longer that 512 bytes will be truncated.
 func (pq *ParsedQuery) MarshalJSON() ([]byte, error) {
-	return json.Marshal(TruncateForUI(pq.Query))
+	return json.Marshal(pq.Query)
 }
 
 // EncodeValue encodes one bind variable value into the query.
