@@ -26,8 +26,6 @@ import (
 	"os"
 
 	"vitess.io/vitess/go/exit"
-	"vitess.io/vitess/go/vt/log"
-
 	"vitess.io/vitess/go/vt/sqlparser/visitorgen"
 )
 
@@ -55,7 +53,6 @@ func main() {
 	fs := token.NewFileSet()
 	file, err := parser.ParseFile(fs, *inputFile, nil, parser.DeclarationErrors)
 	if err != nil {
-		log.Error(err)
 		exit.Return(1)
 	}
 
@@ -77,7 +74,6 @@ func main() {
 	if *compare {
 		currentFile, err := ioutil.ReadFile(*outputFile)
 		if err != nil {
-			log.Error(err)
 			exit.Return(1)
 		}
 		if !bytes.Equal(b.Bytes(), currentFile) {
@@ -87,7 +83,6 @@ func main() {
 	} else {
 		err = ioutil.WriteFile(*outputFile, b.Bytes(), 0644)
 		if err != nil {
-			log.Error(err)
 			exit.Return(1)
 		}
 	}

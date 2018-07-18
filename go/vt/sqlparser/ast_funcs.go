@@ -21,8 +21,6 @@ import (
 	"encoding/json"
 	"strings"
 
-	"vitess.io/vitess/go/vt/log"
-
 	"vitess.io/vitess/go/sqltypes"
 	querypb "vitess.io/vitess/go/vt/proto/query"
 )
@@ -374,7 +372,6 @@ func ReplaceExpr(root, from, to Expr) Expr {
 	tmp := Rewrite(root, replaceExpr(from, to), nil)
 	expr, success := tmp.(Expr)
 	if !success {
-		log.Errorf("Failed to rewrite expression. Rewriter returned a non-expression: " + String(tmp))
 		return from
 	}
 
@@ -515,7 +512,15 @@ func NewColName(str string) *ColName {
 }
 
 //NewSelect is used to create a select statement
-func NewSelect(comments Comments, exprs SelectExprs, selectOptions []string, from TableExprs, where *Where, groupBy GroupBy, having *Where) *Select {
+func NewSelect(
+	comments Comments,
+	exprs SelectExprs,
+	selectOptions []string,
+	from TableExprs,
+	where *Where,
+	groupBy GroupBy,
+	having *Where,
+) *Select {
 	var cache *bool
 	var distinct, straightJoinHint, sqlFoundRows bool
 

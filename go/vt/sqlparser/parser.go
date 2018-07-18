@@ -20,13 +20,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"runtime/debug"
 	"sync"
 
-	"vitess.io/vitess/go/vt/log"
-	"vitess.io/vitess/go/vt/vterrors"
-
 	vtrpcpb "vitess.io/vitess/go/vt/proto/vtrpc"
+	"vitess.io/vitess/go/vt/vterrors"
 )
 
 // parserPool is a pool for parser objects.
@@ -87,14 +84,12 @@ func Parse(sql string) (Statement, error) {
 			if typ, val := tokenizer.Scan(); typ != 0 {
 				return nil, fmt.Errorf("extra characters encountered after end of DDL: '%s'", string(val))
 			}
-			log.Warningf("ignoring error parsing DDL '%s': %v", sql, tokenizer.LastError)
 			tokenizer.ParseTree = tokenizer.partialDDL
 			return tokenizer.ParseTree, nil
 		}
 		return nil, vterrors.New(vtrpcpb.Code_INVALID_ARGUMENT, tokenizer.LastError.Error())
 	}
 	if tokenizer.ParseTree == nil {
-		log.Infof("Empty Statement: %s", debug.Stack())
 		return nil, ErrEmpty
 	}
 	return tokenizer.ParseTree, nil
@@ -108,8 +103,6 @@ func ParseStrictDDL(sql string) (Statement, error) {
 		return nil, tokenizer.LastError
 	}
 	if tokenizer.ParseTree == nil {
-		log.Infof("Empty Statement DDL: %s", debug.Stack())
-
 		return nil, ErrEmpty
 	}
 	return tokenizer.ParseTree, nil
