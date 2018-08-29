@@ -991,6 +991,10 @@ column_default_opt:
   {
     $$ = NewValArg($2)
   }
+| DEFAULT CURRENT_TIMESTAMP '(' ')'
+  {
+    $$ = NewValArg($2)
+  }
 | DEFAULT BIT_LITERAL
   {
     $$ = NewBitVal($2)
@@ -1001,6 +1005,10 @@ on_update_opt:
     $$ = nil
   }
 | ON UPDATE CURRENT_TIMESTAMP
+{
+  $$ = NewValArg($3)
+}
+| ON UPDATE CURRENT_TIMESTAMP '(' ')'
 {
   $$ = NewValArg($3)
 }
